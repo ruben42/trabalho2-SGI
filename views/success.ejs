@@ -1,0 +1,19 @@
+<%- include('head'); -%>
+  <main>
+    <div class="jumbotron">
+      <p class="lead"><i class="fa fa-user" aria-hidden="true"></i>
+        Google Profile Information</p>
+      <hr class="my-4">
+      <p>
+        <%= message %>
+      </p>
+      <p>Google_Id: <%= user.googleId %>
+      </p>
+      <p>Name: <%= user.displayName %>
+      </p>
+      <p>Email Address: <%= user.email %>
+      </p>
+      <a href="/item/create" class="btn btn-primary">Create New Item</a>
+    </div>
+  </main>
+  <%- include('foot'); -%>
