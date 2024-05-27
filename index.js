@@ -26,7 +26,8 @@ app.use(session({
   saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: dbString,
-    collectionName: 'sessions'
+    collectionName: 'sessions',
+    autoRemove: 'native' // Automatically remove expired sessions
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 1, // 1 hour
@@ -37,6 +38,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', require('./routes/authRoutes'));
+app.use('/', require('./routes/itemRoutes'));
 
 // Create the server according to environment
 createServer(app);
