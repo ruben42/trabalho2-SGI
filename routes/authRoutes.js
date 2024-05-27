@@ -3,6 +3,7 @@ const router = require('express').Router();
 const { isAuth, isNotAuth } = require('../services/middleware');
 const Item = require('../models/Item');
 
+// Home page route
 router.get('/', (req, res) => {
     if (req.isAuthenticated()) {
         res.redirect('/success');
@@ -18,10 +19,12 @@ router.get('/', (req, res) => {
     }
 });
 
+// Redirect home route
 router.get('/home'), (req, res) => {
     res.redirect('/');
 }
 
+// Success page route
 router.get('/success', (req, res) => {
     if (req.isAuthenticated()) {
         console.log("User Authenticated:", req.isAuthenticated());
@@ -37,34 +40,49 @@ router.get('/success', (req, res) => {
     }
 });
 
+// Protected resource route
 router.get('/resource', isAuth, (req, res, next) => {
     res.render('resource', {
         authenticated: req.isAuthenticated()
     });
 });
 
+// Status page route
 router.get('/status', (req, res, next) => {
     res.render('status', {
         status: req
     });
 });
 
+// Error page route
 router.get('/error', (req, res) => {
     res.render('error', {
         message_tag: 'Authentication Error'
     });
 });
 
+// Logout route
 router.get('/logout', (req, res) => {
-    req.logout(req.user, (err) => { // Passport logout function
+    console.log("Logging out user:", req.user);
+    req.logout((err) => { // Passport logout function
         if (err) {
-            res.redirect('/error');
+            console.error("Error during logout:", err);
+            return res.redirect('/error');
         }
-        res.redirect('/status');
-        console.log("User Authenticated:", req.isAuthenticated());
+        req.session.destroy((err) => { // Destroy session
+            if (err) {
+                console.error("Error destroying session:", err);
+                return res.redirect('/error');
+            }
+            res.clearCookie('connect.sid', { path: '/' }); // Clear session cookie
+            console.log("Session destroyed and cookie cleared");
+            res.redirect('/'); // Redirect to home page
+            console.log("User Authenticated:", req.isAuthenticated());
+        });
     });
 });
 
+// Google login route
 router.get('/login', isNotAuth,
     passport.authenticate('google', {
         scope: ['profile', 'email'],
@@ -73,6 +91,7 @@ router.get('/login', isNotAuth,
     })
 );
 
+// Google auth callback route
 router.get('/auth/google/callback',
     passport.authenticate('google', {
         failureRedirect: '/error',
@@ -84,29 +103,5 @@ router.get('/auth/google/callback',
         delete req.session.returnTo;
         res.redirect(returnTo || '/success');
     });
-
-// Route to render item creation form page
-router.get('/item/create', isAuth, (req, res) => {
-    res.render('create-item');
-});
-
-// Route to process form submission and save item
-router.post('item/create', isAuth, async (req, res) => {
-    //console.log(req.user);
-    //res.redirect('/success');
-    try {
-        const { title, description } = req.body;
-        const newItem = new Item({
-            title,
-            description,
-            creationDate: new Date() // Set the creation date to the current date
-        });
-        await newItem.save(); // Save the new item to the database
-        res.redirect('/success'); // Redirect to success page
-    } catch (error) {
-        console.error(error);
-        res.redirect('/error'); // In case of error, redirect to the error page
-    }
-});
 
 module.exports = router;
