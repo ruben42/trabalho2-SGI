@@ -27,6 +27,11 @@ const itemSchema = new mongoose.Schema({
     creationDate: { 
         type: Date, 
         default: Date.now 
+    },
+    userID: { // New field to associate item with the user
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'googleusers',
+        required: true
     }
 });
 
