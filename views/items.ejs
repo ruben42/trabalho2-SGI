@@ -8,6 +8,8 @@
                     <a href="/item/<%= item._id %>"><%= item.title %></a>
                     <form action="/item/<%= item._id %>/delete" method="POST" style="display: inline;">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        <br>
+                        <br>
                     </form>
                 </li>
             <% }) %>
