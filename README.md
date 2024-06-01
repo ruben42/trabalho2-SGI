@@ -38,6 +38,6 @@ base num template engine do tipo do utilizado nos exemplos fornecidos (i.e.: EJS
 sendo valorizado o seu deployment numa plataforma Cloud (e.g.: evennode, vercel,
 heroku...).
 
-A entrega dos trabalhos deverá ser realizada até **31 de Maio de 2024**, devendo a defesa
+A entrega dos trabalhos deverá ser realizada até **2 de Junho de 2024**, devendo a defesa
 do trabalho decorrer até **4 de Junho de 2024**. A demonstração das funcionalidades
 implementadas poderá ser realizada on-line.
